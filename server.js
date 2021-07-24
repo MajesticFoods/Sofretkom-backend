@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors')
 const server = express();
 const axios = require('axios');
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
 const PORT = process.env.PORT;
 server.use(cors());
@@ -13,10 +13,10 @@ server.use(express.json())
 
 
 
-mongoose.connect("mongodb://localhost:27017/recipes", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect("mongodb://localhost:27017/recipes", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
 server.get('/', HomeRoute);
 server.get('/recipes', GetRecipes);
