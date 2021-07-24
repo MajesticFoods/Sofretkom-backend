@@ -32,14 +32,17 @@ function GetRecipes (req, res) {
     let recipesArr = []
 
     let searchQuery = req.query.searchQuery
+    let mealType = req.query.mealType
+    let cuisineType = req.query.cuisineType
 
-    let url = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchQuery}&app_id=${process.env.APP_ID}&app_key=${process.env.APP_KEY}`
+    let url = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchQuery}&app_id=${process.env.APP_ID}&app_key=${process.env.APP_KEY}&mealType=${mealType}&cuisineType=${cuisineType}`
 
     axios.get(url).then(response => {
         recipesArr = response.data.hits.map(item => {
             return new Recipe(item);
         })
         res.send(recipesArr)
+        
     })
 }
 
@@ -47,7 +50,9 @@ class Recipe {
     constructor(item){
         this.label = item.recipe.label,
         this.image = item.recipe.image,
-        this.ingredients = item.recipe.ingredients
+        this.ingredients = item.recipe.ingredients,
+        this.mealType = item.recipe.mealType,
+        this.cuisineType = item.recipe.cuisineType
     }
 }
 
