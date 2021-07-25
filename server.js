@@ -13,27 +13,29 @@ server.use(express.json())
 
 
 
-mongoose.connect("mongodb://localhost:27017/recipe", {
+mongoose.connect("mongodb://localhost:27017/recipes", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 // schema
 const RecipeSchema = new mongoose.Schema({
+    email:String,
     label: String,
-    ingredients: Array,
     image: String,
+    ingredients:Array
+       
    
 
 });
 
 
-const User = new mongoose.Schema({
-    email: String,
-    recipes: [RecipeSchema]
-});
+// const User = new mongoose.Schema({
+//     email: String,
+//     rec: RecipeSchema
+// });
 
 const myrecipeModel = mongoose.model('RecipeSchema', RecipeSchema);
-const userrecipeModel = mongoose.model('user', User);
+// const userrecipeModel = mongoose.model('user', User);
 
 
 
@@ -46,39 +48,53 @@ const userrecipeModel = mongoose.model('user', User);
 server.get('/', HomeRoute);
 server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
-server.post('/AddRecipe',addRecipeHandler);
+server.post('/AddRecipe/:email',addRecipeHandler);
+server.get('/GetFavData/:email',GetFavData)
 
+function GetFavData(req,res){
+    const UserEmail=req.params.email
+    myrecipeModel.find({email:UserEmail},(error,FavResult)=>{
+        res.send(FavResult)
+    })
+
+}
 function addRecipeHandler (req,res){
-console.log('aaaaa',req.body);
-let {
-    Email,
-     label,
-     image,
-    ingredients,
-    
-    
-  } = req.body
+// console.log('aaaaa',req.body);
+let { label, image,ingredients } = req.body
+let email=req.params.email
+const NewPecipe=new myrecipeModel ({
+    email:email,
+    label:label,
+         image:image,
+        ingredients:ingredients
 
-  userrecipeModel.find({ email: Email }, (error, recipeData) => {
-    if (error) {
-        res.send(error, 'no favert')
-    }
-    else {
-        console.log('ttttttt',recipeData[0].recipes)
-        recipeData[0].recipes.push({
-            label,
-            image,
-            ingredients,
-            
+})
+NewPecipe.save()
+
+//   userrecipeModel.find({ email: Email }, (error, recipeData) => {
+//     if (error) {
+//         res.send(error, 'no favert')
+//     }
+//     else {
+//         // console.log('ttttttt',recipeData[0].rec)
+        
+// // console.log(recipeData[0])
+
+
+//         // recipeData[0].rec.push({
+//         //     label:label,
+//         //     image:image,
+//         //     ingredients:ingredients
+          
            
 
-        })
-        console.log('after adding', recipeData[0])
-        recipeData[0].save()
-        res.send(recipeData[0].recipes)
+//         // })
+//         console.log('after adding', recipeData[0])
+//         // recipeData[0].save()
+//         // res.send(recipeData[0].rec)
 
-    }
-})
+//     }
+// })
 }
 
 
