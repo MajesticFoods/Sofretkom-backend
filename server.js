@@ -13,7 +13,7 @@ server.use(express.json())
 
 
 
-mongoose.connect("mongodb://localhost:27017/recipes", {
+mongoose.connect("mongodb://emanmkhareez:eman12345@cluster0-shard-00-00.2xoym.mongodb.net:27017,cluster0-shard-00-01.2xoym.mongodb.net:27017,cluster0-shard-00-02.2xoym.mongodb.net:27017/recipes?ssl=true&replicaSet=atlas-zeqdyo-shard-0&authSource=admin&retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
