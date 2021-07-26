@@ -31,7 +31,7 @@ const RecipeSchema = new mongoose.Schema({
 
 // const User = new mongoose.Schema({
 //     email: String,
-//     rec: RecipeSchema
+//     rec: [RecipeSchema]
 // });
 
 const myrecipeModel = mongoose.model('RecipeSchema', RecipeSchema);
@@ -50,7 +50,7 @@ server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData)
-
+server.delete('/DeleteRecipe/:id',deleteRecipe)
 function GetFavData(req,res){
     const UserEmail=req.params.email
     myrecipeModel.find({email:UserEmail},(error,FavResult)=>{
@@ -125,6 +125,53 @@ function GetRecipes (req, res) {
         
     })
 }
+// server.delete('/removebooks/:BooksId',removeBooksHandler);
+// function removeBooksHandler(req, res){
+
+//   let {email} = req.query;
+// let index =Number(req.params.BooksId);
+
+// newUserModel.find({email: email}, (error , userData) => {
+
+//   if(error){
+//     res.send('could not delete ')
+//   }else{
+// let deletedData=userData[0].books.filter((el, indx)=>{
+
+// if  (indx !== index){return el}
+
+// })
+// userData[0].books =deletedData;
+// userData[0].save();
+// res.send(userData[0].books);
+
+// }
+
+// })
+// }
+
+function deleteRecipe(req,res){
+
+    let email = req.query.userEmail;
+let index=req.params.id
+console.log(index);
+
+console.log(email);
+// let email=req.params.userEmail
+myrecipeModel.deleteOne({_id:index},(error,data)=>{
+    myrecipeModel.find({email:email},(error,data)=>{
+        
+        
+        
+        
+        
+        res.send(data)
+    })
+
+})
+}
+
+
 
 class Recipe {
     constructor(item){
