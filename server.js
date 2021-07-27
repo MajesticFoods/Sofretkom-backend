@@ -45,6 +45,7 @@ server.get('/recipes', GetRecipes);
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData);
 server.put('/updateRecipe/:id',updateRecipeFun);
+server.delete('/DeleteRecipe/:id',deleteRecipe)
 
 function GetFavData(req,res){
     const UserEmail=req.params.email
@@ -60,8 +61,8 @@ let email=req.params.email
 const NewPecipe=new myrecipeModel ({
     email:email,
     label:label,
-         image:image,
-        ingredients:ingredients
+    image:image,
+    ingredients:ingredients
 
 })
 NewPecipe.save()
@@ -131,20 +132,30 @@ function updateRecipeFun (req,res){
     console.log('aaaaaa',req.body);
     console.log('aaaaaa',req.params);
 
-    let {updateLabel,userEmail} = req.body;
+    let {updateLabel,updateImage,userEmail} = req.body;
     let index = Number(req.params.id);
 
     myrecipeModel.find({email:userEmail},(error,recipeData)=>{
-        if(error)res.send('error in finding the data')
+        if(error)
+        res.send('error in finding the data')
         else {
+            
+
             recipeData.map((item,idx)=>{
+                 
                 if(idx==index){
                     item.label=updateLabel
+                    item.image=updateImage
                     item.save()
-                }
-            })
-            res.send(recipeData)
+                   
 
+                        
+                    }
+                    res.send(recipeData)
+                })
+            console.log('ssssssss',recipeData);
+
+            
 
             // console.log(recipeData)
             // recipeData.splice(index,1,{
@@ -155,13 +166,32 @@ function updateRecipeFun (req,res){
             // recipeData.save();
             // res.send(recipeData)
 
-        }
+         }
     })
 
 }
 
 
+function deleteRecipe(req,res){
 
+let email = req.query.userEmail;
+let index=req.params.id
+console.log(index);
+
+console.log(email);
+// let email=req.params.userEmail
+myrecipeModel.deleteOne({_id:index},(error,data)=>{
+    myrecipeModel.find({email:email},(error,data)=>{
+        
+        
+        
+        
+        
+        res.send(data)
+    })
+
+})
+}
 
 
 
