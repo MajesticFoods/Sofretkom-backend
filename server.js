@@ -50,6 +50,34 @@ server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData)
+server.put('/updateRecipe/:email',updateRecipeFun)
+
+function updateRecipeFun (req,res){
+    
+    console.log('aaaaaa',req.body);
+    console.log('aaaaaa',req.params);
+
+    let {updateLabel,userEmail} = req.body;
+    let index = Number(req.params.email);
+
+    myrecipeModel.findOne({email:userEmail},(error,recipeData)=>{
+        if(error) res.send('error in finding the data')
+        else {
+            console.log(recipeData)
+            recipeData.recipes.splice(index,1,{
+                updateLabel:updateLabel
+            })
+            console.log(recipeData)
+            recipeData.save();
+            res.send(recipeData.recipes)
+            
+        }
+    })
+
+}
+
+
+
 
 function GetFavData(req,res){
     const UserEmail=req.params.email
