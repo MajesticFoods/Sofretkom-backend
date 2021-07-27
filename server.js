@@ -126,7 +126,6 @@ class Recipe {
     }
 }
 
-
 function updateRecipeFun (req,res){
 
     console.log('aaaaaa',req.body);
@@ -134,7 +133,6 @@ function updateRecipeFun (req,res){
 
     let {updateLabel,updateImage,userEmail} = req.body;
     let index = Number(req.params.id);
-
     myrecipeModel.find({email:userEmail},(error,recipeData)=>{
         if(error)
         res.send('error in finding the data')
@@ -146,7 +144,7 @@ function updateRecipeFun (req,res){
                     item.image=updateImage
                     item.save()                       
                     }
-                    res.send(recipeData)
+                    
                 })          
 
             // console.log(recipeData)
@@ -157,7 +155,7 @@ function updateRecipeFun (req,res){
             
             // recipeData.save();
             // res.send(recipeData)
-
+            res.send(recipeData)
          }
     })
 
@@ -174,8 +172,6 @@ myrecipeModel.find({email:email},(error,data)=>{
     })
 })
 }
-
-
 
 server.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`);
