@@ -140,22 +140,14 @@ function updateRecipeFun (req,res){
         res.send('error in finding the data')
         else {
             
-
             recipeData.map((item,idx)=>{
-                 
-                if(idx==index){
+                    if(idx==index){
                     item.label=updateLabel
                     item.image=updateImage
-                    item.save()
-                   
-
-                        
+                    item.save()                       
                     }
                     res.send(recipeData)
-                })
-            console.log('ssssssss',recipeData);
-
-            
+                })          
 
             // console.log(recipeData)
             // recipeData.splice(index,1,{
@@ -170,26 +162,16 @@ function updateRecipeFun (req,res){
     })
 
 }
-
-
 function deleteRecipe(req,res){
-
 let email = req.query.userEmail;
 let index=req.params.id
 console.log(index);
-
 console.log(email);
 // let email=req.params.userEmail
 myrecipeModel.deleteOne({_id:index},(error,data)=>{
-    myrecipeModel.find({email:email},(error,data)=>{
-        
-        
-        
-        
-        
+myrecipeModel.find({email:email},(error,data)=>{      
         res.send(data)
     })
-
 })
 }
 
