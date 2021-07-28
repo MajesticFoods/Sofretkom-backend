@@ -44,7 +44,7 @@ server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData);
-server.put('/updateRecipe/:id',updateRecipeFun);
+server.put('/updateRecipe/:id/:id2',updateRecipeFun);
 server.delete('/DeleteRecipe/:id',deleteRecipe)
 
 function GetFavData(req,res){
@@ -131,8 +131,9 @@ function updateRecipeFun (req,res){
     console.log('aaaaaa',req.body);
     console.log('aaaaaa',req.params);
 
-    let {updateLabel,updateImage,userEmail} = req.body;
+    let {updateLabel,updateImage,updateIngredients,userEmail} = req.body;
     let index = Number(req.params.id);
+    let ingIndex = Number(req.params.id2);
     myrecipeModel.find({email:userEmail},(error,recipeData)=>{
         if(error)
         res.send('error in finding the data')
@@ -142,6 +143,10 @@ function updateRecipeFun (req,res){
                     if(idx==index){
                     item.label=updateLabel
                     item.image=updateImage
+                    item.ingredients[ingIndex].text=updateIngredients
+                       
+                
+                 
                     item.save()                       
                     }
                     
