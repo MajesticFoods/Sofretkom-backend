@@ -26,7 +26,7 @@ const RecipeSchema = new mongoose.Schema({
     email:String,
     label: String,
     image: String,
-    ingredients:Array
+    ingredients:String
           });
 
 
@@ -44,7 +44,7 @@ server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData);
-server.put('/updateRecipe/:id/:id2',updateRecipeFun);
+server.put('/updateRecipe/:id/',updateRecipeFun);
 server.delete('/DeleteRecipe/:id',deleteRecipe)
 
 function GetFavData(req,res){
@@ -58,39 +58,23 @@ function addRecipeHandler (req,res){
 // console.log('aaaaa',req.body);
 let { label, image,ingredients } = req.body
 let email=req.params.email
+let ingredients2=ingredients.map((item)=>{
+    return item.text
+})
 const NewPecipe=new myrecipeModel ({
     email:email,
     label:label,
     image:image,
-    ingredients:ingredients
+   
+    ingredients:ingredients2.toString()
 
 })
+console.log(ingredients2)
+
+
 NewPecipe.save()
 
-//   userrecipeModel.find({ email: Email }, (error, recipeData) => {
-//     if (error) {
-//         res.send(error, 'no favert')
-//     }
-//     else {
-//         // console.log('ttttttt',recipeData[0].rec)
-        
-// // console.log(recipeData[0])
 
-
-//         // recipeData[0].rec.push({
-//         //     label:label,
-//         //     image:image,
-//         //     ingredients:ingredients
-          
-           
-
-//         // })
-//         console.log('after adding', recipeData[0])
-//         // recipeData[0].save()
-//         // res.send(recipeData[0].rec)
-
-//     }
-// })
 }
 function HomeRoute (req,res) {
     res.send('Home Route Working')
@@ -111,6 +95,7 @@ function GetRecipes (req, res) {
         recipesArr = response.data.hits.map(item => {
             return new Recipe(item);
         })
+        console.log(recipesArr)
         res.send(recipesArr)
         
     })
@@ -143,19 +128,18 @@ function updateRecipeFun (req,res){
                     if(idx==index){
                     item.label=updateLabel
                     item.image=updateImage
-                   item.ingredients.map((element,index)=>{
-                    element.text=updateIngredients
+                   item.ingredients=updateIngredients
 
-                   })
+                   }
                     
                        
                 
                  
-                    item.save()                       
-                    }
+                   item.save()          
+                    
                     
                 })          
-
+                    
             // console.log(recipeData)
             // recipeData.splice(index,1,{
             //     label:updateLabel
