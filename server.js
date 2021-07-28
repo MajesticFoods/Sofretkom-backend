@@ -143,7 +143,11 @@ function updateRecipeFun (req,res){
                     if(idx==index){
                     item.label=updateLabel
                     item.image=updateImage
-                    item.ingredients[ingIndex].text=updateIngredients
+                   item.ingredients.map((element,index)=>{
+                    element.text=updateIngredients
+
+                   })
+                    
                        
                 
                  
