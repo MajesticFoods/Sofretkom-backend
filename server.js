@@ -13,10 +13,10 @@ server.use(express.json())
 
 
 
-mongoose.connect("mongodb://emanmkhareez:eman12345@cluster0-shard-00-00.2xoym.mongodb.net:27017,cluster0-shard-00-01.2xoym.mongodb.net:27017,cluster0-shard-00-02.2xoym.mongodb.net:27017/recipes?ssl=true&replicaSet=atlas-zeqdyo-shard-0&authSource=admin&retryWrites=true&w=majority", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(`${process.env.App_DB}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 // mongoose.connect('mongodb://localhost:27017/recipes', {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -44,7 +44,7 @@ server.get('/recipes', GetRecipes);
 //http://localhost:3001/AddRecipe
 server.post('/AddRecipe/:email',addRecipeHandler);
 server.get('/GetFavData/:email',GetFavData);
-server.put('/updateRecipe/:id',updateRecipeFun);
+server.put('/updateRecipe/:id/',updateRecipeFun);
 server.delete('/DeleteRecipe/:id',deleteRecipe)
 
 function GetFavData(req,res){
@@ -58,39 +58,23 @@ function addRecipeHandler (req,res){
 // console.log('aaaaa',req.body);
 let { label, image,ingredients } = req.body
 let email=req.params.email
+let ingredients2=ingredients.map((item)=>{
+    return item.text
+})
 const NewPecipe=new myrecipeModel ({
     email:email,
     label:label,
     image:image,
-    ingredients:ingredients
+   
+    ingredients:ingredients2.toString()
 
 })
+console.log(ingredients2)
+
+
 NewPecipe.save()
 
-//   userrecipeModel.find({ email: Email }, (error, recipeData) => {
-//     if (error) {
-//         res.send(error, 'no favert')
-//     }
-//     else {
-//         // console.log('ttttttt',recipeData[0].rec)
-        
-// // console.log(recipeData[0])
 
-
-//         // recipeData[0].rec.push({
-//         //     label:label,
-//         //     image:image,
-//         //     ingredients:ingredients
-          
-           
-
-//         // })
-//         console.log('after adding', recipeData[0])
-//         // recipeData[0].save()
-//         // res.send(recipeData[0].rec)
-
-//     }
-// })
 }
 function HomeRoute (req,res) {
     res.send('Home Route Working')
@@ -111,6 +95,7 @@ function GetRecipes (req, res) {
         recipesArr = response.data.hits.map(item => {
             return new Recipe(item);
         })
+        console.log(recipesArr)
         res.send(recipesArr)
         
     })
@@ -131,8 +116,9 @@ function updateRecipeFun (req,res){
     console.log('aaaaaa',req.body);
     console.log('aaaaaa',req.params);
 
-    let {updateLabel,updateImage,userEmail} = req.body;
+    let {updateLabel,updateImage,updateIngredients,userEmail} = req.body;
     let index = Number(req.params.id);
+    let ingIndex = Number(req.params.id2);
     myrecipeModel.find({email:userEmail},(error,recipeData)=>{
         if(error)
         res.send('error in finding the data')
@@ -142,11 +128,18 @@ function updateRecipeFun (req,res){
                     if(idx==index){
                     item.label=updateLabel
                     item.image=updateImage
-                    item.save()                       
-                    }
+                   item.ingredients=updateIngredients
+
+                   }
+                    
+                       
+                
+                 
+                   item.save()          
+                    
                     
                 })          
-
+                    
             // console.log(recipeData)
             // recipeData.splice(index,1,{
             //     label:updateLabel
